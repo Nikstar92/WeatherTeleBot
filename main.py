@@ -1,6 +1,7 @@
 import telebot
 import requests
 import json
+from datetime import datetime
 
 bot = telebot.TeleBot('6263478357:AAEjFZN2nXCLxk4LUfr_EZX_GIlKAJ_cI5k')
 API = 'e7ac9efc14b0e05bba39d2ca34c39e96'
@@ -14,7 +15,7 @@ def main(message):
 
 @bot.message_handler(content_types=['text'])
 def get_weather(message):
-    city = message.text.strip().capitalize()
+    city = message.text.strip().title()
     res = requests.get(f'https://api.openweathermap.org/data/2.5/weather?q={city}&appid={API}&units=metric&lang=ru')
     if res.status_code == 200:
         data = json.loads(res.text)
@@ -24,10 +25,14 @@ def get_weather(message):
         pressure = data['main']['pressure']
         humidity = data['main']['humidity']
         wind = data['wind']['speed']
+        sunrise = data['sys']['sunrise']
+        sunset = data['sys']['sunset']
         # wind_gust = data['wind']['gust']
         bot.reply_to(message, f'Сейчас погода в городе {city} - {temp:.1f} °C, ощущается как - {feels_like:.1f}°C,'
                                 f' на улице {weather}, атмосферное давление - {pressure} мм рт.ст.,'
-                                f' влажность воздуха - {humidity} %, скорость ветра - {wind:.1f} м/с.')
+                                f' влажность воздуха - {humidity} %, скорость ветра - {wind:.1f} м/с., '
+                              f'восход солнце в {datetime.fromtimestamp(sunrise).strftime("%H:%M:%S")},'
+                              f' закат солнце в {datetime.fromtimestamp(sunset).strftime("%H:%M:%S")}.')
 
         # bot.reply_to(message, f'Сейчас погода в городе {city} - {data}')
         if weather == 'ясно':
@@ -36,7 +41,7 @@ def get_weather(message):
             image = 'drizzle.png'
         elif weather == 'переменная облачность':
             image = 'few clouds.jpeg'
-        elif weather == 'Mist':
+        elif weather == 'туман':
             image = 'mist.jpeg'
         elif weather == 'пасмурно':
             image = 'overcast clouds.png'
