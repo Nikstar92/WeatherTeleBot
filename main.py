@@ -14,7 +14,7 @@ def main(message):
 
 @bot.message_handler(content_types=['text'])
 def get_weather(message):
-    city = message.text.strip().lower()
+    city = message.text.strip().capitalize()
     res = requests.get(f'https://api.openweathermap.org/data/2.5/weather?q={city}&appid={API}&units=metric&lang=ru')
     if res.status_code == 200:
         data = json.loads(res.text)
@@ -24,41 +24,32 @@ def get_weather(message):
         pressure = data['main']['pressure']
         humidity = data['main']['humidity']
         wind = data['wind']['speed']
+        # wind_gust = data['wind']['gust']
         bot.reply_to(message, f'Сейчас погода в городе {city} - {temp:.1f} °C, ощущается как - {feels_like:.1f}°C,'
-                              f' на улице - {weather}, атмосферное давление - {pressure} мм рт.ст.,'
-                              f' влажность воздуха - {humidity} %, скорость ветра - {wind:.1f} м/с.')
+                                f' на улице {weather}, атмосферное давление - {pressure} мм рт.ст.,'
+                                f' влажность воздуха - {humidity} %, скорость ветра - {wind:.1f} м/с.')
 
         # bot.reply_to(message, f'Сейчас погода в городе {city} - {data}')
-        # match weather:
-        #     case 'ясно': image = 'clear sky.png'
-        #     case 'drizzle': image = 'drizzle.png'
-        #     case 'переменная облачность': image = 'few clouds.png'
-        #     case 'mist': image = 'mist.png'
-        #     case 'overcast clouds': image = 'overcast clouds.png'
-        #     case 'rain': image = 'rain.png'
-        #     case 'shower rain': image = 'shower rain.png'
-        #     case 'snow': image = 'snow.png'
-        #     case 'thunderstorm': image = 'thunderstorm.png'
-        # if weather == 'clear sky':
-        #     image = 'clear sky.png'
-        # elif weather == 'drizzle':
-        #     image = 'drizzle.png'
-        # elif weather == 'few clouds':
-        #     image = 'few clouds.png'
-        # elif weather == 'mist':
-        #     image = 'mist.png'
-        # elif weather == 'broken clouds':
-        #     image = 'overcast clouds.png'
-        # elif weather == 'rain':
-        #     image = 'rain.png'
-        # elif weather == 'shower rain':
-        #     image = 'shower rain.png'
-        # elif weather == 'snow':
-        #     image = 'snow.png'
-        # else:
-        #     image = 'thunderstorm.png'
-        # file = open('./' + image, 'rb')
-        # bot.send_photo(message.chat.id, file)
+        if weather == 'ясно':
+            image = 'clear sky.png'
+        elif weather == 'дождь':
+            image = 'drizzle.png'
+        elif weather == 'переменная облачность':
+            image = 'few clouds.jpeg'
+        elif weather == 'Mist':
+            image = 'mist.jpeg'
+        elif weather == 'пасмурно':
+            image = 'overcast clouds.png'
+        elif weather == 'облачно с прояснениями' or weather == 'небольшой дождь':
+            image = 'rain.png'
+        elif weather == 'shower rain':
+            image = 'shower rain.png'
+        elif weather == 'Snow':
+            image = 'snow.png'
+        else:
+            image = 'Thunderstorm.png'
+        file = open(image, 'rb')
+        bot.send_photo(message.chat.id, file)
     else:
         bot.reply_to(message, 'Город указан не верно')
 
