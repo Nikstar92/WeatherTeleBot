@@ -29,8 +29,8 @@ def get_weather(message):
         sunset = data['sys']['sunset']
         # wind_gust = data['wind']['gust']
         bot.reply_to(message, f'Сейчас погода в городе {city} - {temp:.1f} °C, ощущается как - {feels_like:.1f}°C,'
-                                f' на улице {weather}, атмосферное давление - {pressure} мм рт.ст.,'
-                                f' влажность воздуха - {humidity} %, скорость ветра - {wind:.1f} м/с., '
+                              f' на улице {weather}, атмосферное давление - {pressure} мм рт.ст.,'
+                              f' влажность воздуха - {humidity} %, скорость ветра - {wind:.1f} м/с., '
                               f'восход солнце в {datetime.fromtimestamp(sunrise).strftime("%H:%M:%S")},'
                               f' закат солнце в {datetime.fromtimestamp(sunset).strftime("%H:%M:%S")}.')
 
@@ -38,15 +38,15 @@ def get_weather(message):
         if weather == 'ясно':
             image = 'clear sky.png'
         elif weather == 'дождь':
-            image = 'drizzle.png'
-        elif weather == 'переменная облачность':
-            image = 'few clouds.jpeg'
-        elif weather == 'туман':
-            image = 'mist.jpeg'
+            image = 'rain.png'
+        elif weather == 'переменная облачность' or weather == 'небольшая облачность':
+            image = 'few clouds.png'
+        elif weather == 'туман' or weather == 'плотный туман':
+            image = 'fog.png'
         elif weather == 'пасмурно':
             image = 'overcast clouds.png'
         elif weather == 'облачно с прояснениями' or weather == 'небольшой дождь':
-            image = 'rain.png'
+            image = 'drizzle.png'
         elif weather == 'shower rain':
             image = 'shower rain.png'
         elif weather == 'Snow':
